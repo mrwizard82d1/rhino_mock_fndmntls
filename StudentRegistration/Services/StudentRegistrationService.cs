@@ -26,5 +26,11 @@ namespace Services
                 throw new Exception($"Invalid student: {toRegister}.");
             }
         }
+
+        public void RegisterNewStudent(int studentId, string firstName, string lastName)
+        {
+            var toRegister = new Student();
+            RegisterNewStudent(toRegister);
+        }
     }
 }

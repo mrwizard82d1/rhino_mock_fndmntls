@@ -24,6 +24,22 @@ namespace Services.Tests
         }
 
         [TestCase]
+        public void SaveTheCreatedStudentIfStudentValid()
+        {
+            var mockStudentRepository = MockRepository.GenerateMock<IStudentRepository>();
+            var mockStudentValidator = MockRepository.GenerateMock<IStudentValidator>();
+            mockStudentValidator.Stub(sv => sv.ValidateStudent(Arg<Student>.Is.Anything)).Return(true);
+            var sut = new StudentRegistrationService(mockStudentRepository, mockStudentValidator);
+
+            sut.RegisterNewStudent(314159, "First", "Last");
+
+            // The Rhino Mocks `Is` constraint provides some level of safety; however, note that `Anything` will
+            // succceed if one saves a `null` value. One could also use the constraint `Is.NotNull`. This constraint
+            // would fail if one saves a `null` value. 
+            mockStudentRepository.AssertWasCalled(msr => msr.Save(Arg<Student>.Is.Anything));
+        }
+
+        [TestCase]
         public void ThrowExceptionIfStudentInvalid()
         {
             var mockStudentRepository = MockRepository.GenerateMock<IStudentRepository>();
