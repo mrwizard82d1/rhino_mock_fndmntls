@@ -3,6 +3,7 @@ using DataAccess;
 using Domain;
 using NUnit.Framework;
 using Rhino.Mocks;
+using StructureMap.AutoMocking;
 
 namespace Services.Tests
 {
@@ -65,6 +66,39 @@ namespace Services.Tests
                 LastName = lastName
             };
             mockStudentRepository.AssertWasCalled(
+                msr => msr.Save(Arg<Student>.Matches(new StudentConstraint(expectedStudent))));
+        }
+
+        [TestCase]
+        public void SaveTheCreatedStudentIfStudentValidUsingAutoMocker()
+        {
+            var autoMocker = new RhinoAutoMocker<StudentRegistrationService>();
+
+            // **Caution**! One must **not** construct mock instances manually; instead, all references to mocked
+            // instances **must** be retrieved from the `autoMocker` (container) instance.
+            //
+            // Additionally, one can ask `autoMocker` for a mock of **any** interface; however, the `autoMocker` 
+            // instance ensures that any instance involved in constructing an object is the reference used to 
+            // construct the object.
+            //
+            // Although AutoMocker provides some benefit in setting up tests, the most broad reaching benefit is that
+            // one is now free to change the constructor of the class under test. AutoMocker will correctly construct
+            // instances with the new argument(s).
+            var mockStudentValidator = autoMocker.Get<IStudentValidator>();
+            mockStudentValidator.Stub(sv => sv.ValidateStudent(Arg<Student>.Is.Anything)).Return(true);
+
+            const int studentId = 314159;
+            const string firstName = "First";
+            const string lastName = "Last";
+            autoMocker.ClassUnderTest.RegisterNewStudent(studentId, firstName, lastName);
+
+            var expectedStudent = new Student
+            {
+                StudentId = studentId,
+                FirstName = firstName,
+                LastName = lastName
+            };
+            autoMocker.Get<IStudentRepository>().AssertWasCalled(
                 msr => msr.Save(Arg<Student>.Matches(new StudentConstraint(expectedStudent))));
         }
 
