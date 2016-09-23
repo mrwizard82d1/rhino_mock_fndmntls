@@ -1,7 +1,6 @@
 ﻿using DataAccess;
 using Domain;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using Rhino.Mocks;
 using View;
 
@@ -11,9 +10,12 @@ namespace RegisterNewStudentShould
     public class RegisterNewStudentShould
     {
         [TestCase]
-        public void SaveTheNewStudentIfValidStudent()
+        public void SaveTheNewStudentIfValidStudentAndShouldSaveTrueOnView()
         {
             var mockStudentView = MockRepository.GenerateMock<IStudentView>();
+            // Remember that the property `ShouldSaveStudent` on the `mockStudentView` returns the default value for
+            // the return type if I do not explicitly set the return value.
+            mockStudentView.Stub(sv => sv.ShouldSaveStudent).Return(true);
             var mockStudentRepsitory = MockRepository.GenerateMock<IStudentRepository>();
             var sut = new StudentRegistrationPresenter(mockStudentView, mockStudentRepsitory);
 
@@ -24,9 +26,12 @@ namespace RegisterNewStudentShould
         }
 
         [TestCase]
-        public void SetWasStudentSavedToTrueIfValidStudent()
+        public void SetWasStudentSavedToTrueIfValidStudentAndShouldSaveTrueOnView()
         {
             var mockStudentView = MockRepository.GenerateMock<IStudentView>();
+            // Remember that the property `ShouldSaveStudent` on the `mockStudentView` returns the default value for
+            // the return type if I do not explicitly set the return value.
+            mockStudentView.Stub(sv => sv.ShouldSaveStudent).Return(true);
             var mockStudentRepsitory = MockRepository.GenerateMock<IStudentRepository>();
             var sut = new StudentRegistrationPresenter(mockStudentView, mockStudentRepsitory);
 

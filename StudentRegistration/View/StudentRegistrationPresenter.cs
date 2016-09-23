@@ -16,11 +16,11 @@ namespace View
 
         public void RegisterNewStudent(Student newStudent)
         {
-            if (newStudent == null)
+            if (newStudent == null || !studentView.ShouldSaveStudent)
             {
                 studentView.WasStudentSaved = false;
             }
-            else
+            else if (studentView.ShouldSaveStudent)
             {
                 studentRepository.Save(newStudent);
                 studentView.WasStudentSaved = true;
