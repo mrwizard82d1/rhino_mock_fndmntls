@@ -29,7 +29,7 @@ namespace Services
 
         public void RegisterNewStudent(int studentId, string firstName, string lastName)
         {
-            var toRegister = new Student();
+            var toRegister = new Student {StudentId = studentId, FirstName = firstName, LastName = lastName};
             RegisterNewStudent(toRegister);
         }
     }

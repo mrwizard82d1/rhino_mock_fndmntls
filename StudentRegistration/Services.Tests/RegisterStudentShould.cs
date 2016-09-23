@@ -31,12 +31,19 @@ namespace Services.Tests
             mockStudentValidator.Stub(sv => sv.ValidateStudent(Arg<Student>.Is.Anything)).Return(true);
             var sut = new StudentRegistrationService(mockStudentRepository, mockStudentValidator);
 
-            sut.RegisterNewStudent(314159, "First", "Last");
+            const int studentId = 314159;
+            const string firstName = "First";
+            const string lastName = "Last";
+            sut.RegisterNewStudent(studentId, firstName, lastName);
 
             // The Rhino Mocks `Is` constraint provides some level of safety; however, note that `Anything` will
             // succceed if one saves a `null` value. One could also use the constraint `Is.NotNull`. This constraint
             // would fail if one saves a `null` value. 
-            mockStudentRepository.AssertWasCalled(msr => msr.Save(Arg<Student>.Is.Anything));
+            mockStudentRepository.AssertWasCalled(
+                msr =>
+                    msr.Save(
+                        Arg<Student>.Matches(
+                            s => (s.StudentId == studentId) && (s.FirstName == firstName) && (s.LastName == lastName))));
         }
 
         [TestCase]
