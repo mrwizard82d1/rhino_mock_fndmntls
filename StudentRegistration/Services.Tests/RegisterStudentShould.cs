@@ -40,10 +40,12 @@ namespace Services.Tests
             // succceed if one saves a `null` value. One could also use the constraint `Is.NotNull`. This constraint
             // would fail if one saves a `null` value. 
             mockStudentRepository.AssertWasCalled(
-                msr =>
-                    msr.Save(
-                        Arg<Student>.Matches(
-                            s => (s.StudentId == studentId) && (s.FirstName == firstName) && (s.LastName == lastName))));
+                msr => msr.Save(Arg<Student>.Matches(s => HasCorrectDetails(s, studentId, firstName, lastName))));
+        }
+
+        private static bool HasCorrectDetails(Student s, int studentId, string firstName, string lastName)
+        {
+            return (s.StudentId == studentId) && (s.FirstName == firstName) && (s.LastName == lastName);
         }
 
         [TestCase]
