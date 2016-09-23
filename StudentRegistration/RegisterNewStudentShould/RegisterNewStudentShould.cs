@@ -1,15 +1,16 @@
 ﻿using DataAccess;
 using Domain;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+using NUnit.Framework.Internal;
 using Rhino.Mocks;
 using View;
 
 namespace RegisterNewStudentShould
 {
-    [TestClass]
+    [TestFixture]
     public class RegisterNewStudentShould
     {
-        [TestMethod]
+        [TestCase]
         public void SaveTheNewStudentIfValidStudent()
         {
             var mockStudentView = MockRepository.GenerateMock<IStudentView>();
@@ -22,7 +23,7 @@ namespace RegisterNewStudentShould
             mockStudentRepsitory.AssertWasCalled(sr => sr.Save(newStudent));
         }
 
-        [TestMethod]
+        [TestCase]
         public void SetWasStudentSavedToTrueIfValidStudent()
         {
             var mockStudentView = MockRepository.GenerateMock<IStudentView>();
@@ -35,7 +36,7 @@ namespace RegisterNewStudentShould
             mockStudentView.AssertWasCalled(sv => sv.WasStudentSaved = true);
         }
 
-        [TestMethod]
+        [TestCase]
         public void NotSaveTheNewStudentIfInvalidStudent()
         {
             var mockStudentView = MockRepository.GenerateMock<IStudentView>();
@@ -47,7 +48,7 @@ namespace RegisterNewStudentShould
             mockStudentRepsitory.AssertWasNotCalled(sr => sr.Save(null));
         }
 
-        [TestMethod]
+        [TestCase]
         public void SetWasStudentSavedToFalseIfInvalidStudent()
         {
             var mockStudentView = MockRepository.GenerateMock<IStudentView>();
